@@ -82,7 +82,13 @@ class Superstore():
     
     # calculate average profit for each category
     def average_profit(self, profit_dict):
-        return ""
+        dict = {}
+        for category in profit_dict:
+            profit = profit_dict[category]
+            if profit:
+                avg = sum(profit)/ len(profit)
+            dict[category] = avg
+        return dict
     
     # find the highest average profit and its category
     def max_average_profit(self, average_profit_dict):
@@ -150,7 +156,13 @@ class TestSuperstoreReader(unittest.TestCase):
         self.assertIn('Office Supplies', grouped)
     
     def test_average_profit(self):
-        return ""
+        test_data = {
+            'Furniture': [100.0, 200.0, 300.0], 
+            'Technology': [500.0, 500.0]
+        }
+        result = self.superstore_reader.average_profit(test_data)
+        self.assertEqual(result['Furniture'], 200.0)
+        self.assertEqual(result['Technology'], 500.0)
     
     def test_max_average_profit(self):
         return ""
