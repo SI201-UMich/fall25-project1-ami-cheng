@@ -66,7 +66,19 @@ class Superstore():
          """
     # creates a list of profit assigned to their categories
     def group_profits_by_category(self):
-        return ""
+        grouped = {}
+        categories = self.data_dict['Category']
+        profits = self.data_dict["Profit"]
+
+        for i in range(len(categories)):
+            category = categories[i]
+            profit = profits[i]
+
+            if category not in grouped:
+                grouped[category] = []
+            grouped[category].append(profit)
+
+        return grouped
     
     # calculate average profit for each category
     def average_profit(self, profit_dict):
@@ -131,7 +143,11 @@ class TestSuperstoreReader(unittest.TestCase):
         self.assertTrue(all(isinstance(x, float) for x in self.superstore_reader.data_dict['Profit']))
 
     def test_group_profits_by_category(self):
-        return ""
+        grouped = self.superstore_reader.group_profits_by_category()
+        self.assertIsInstance(grouped, dict)
+        self.assertTrue(all(isinstance(val, list) for val in grouped.values()))
+        self.assertIn('Furniture', grouped)
+        self.assertIn('Office Supplies', grouped)
     
     def test_average_profit(self):
         return ""
