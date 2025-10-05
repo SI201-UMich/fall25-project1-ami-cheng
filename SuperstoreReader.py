@@ -55,6 +55,28 @@ class Superstore():
             self.data_dict['Discount'].append(float(item[11]))
             self.data_dict['Profit'].append(float(item[12]))
 
+        def category_profit(self):
+            """
+            This method iterates category and profit column and returns to the name of 
+            category with the highest average profit with the profit amount
+
+            Return:
+                String with category name with the highest profit and average profit amount
+            """
+            return ""
+        
+        def state_shipmode(self):
+            """
+            This method iterates ship mode and state column and returns to the name of
+            the most common ship mode in each state with the percentage of state's most common ship mode out of
+            all ship mode
+
+            Return:
+                String with state, most commonly used ship mode name, and the percentage of
+                the state's most common ship mode out of all ship mode
+            """
+            return ""
+
 class TestPollReader(unittest.TestCase):
     def setUp(self):
         self.superstore_reader = Superstore('SampleSuperstore.csv')
@@ -78,6 +100,12 @@ class TestPollReader(unittest.TestCase):
         self.assertTrue(all(isinstance(x, int) for x in self.superstore_reader.data_dict['Quantity']))
         self.assertTrue(all(isinstance(x, float) for x in self.superstore_reader.data_dict['Discount']))
         self.assertTrue(all(isinstance(x, float) for x in self.superstore_reader.data_dict['Profit']))
+
+    def test_category_profit(self):
+        return ""
+    
+    def test_state_shipmode(self):
+        return ""
 
 
 
