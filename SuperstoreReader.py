@@ -150,8 +150,24 @@ class Superstore():
     
     # find most common ship mode in each state and the percentage of most common ship mode used
     def get_most_common_shipmode(self, state_modes_dict):
-        return ""
-    
+        result = {}
+        for state, modes in state_modes_dict.items():
+            mode_count = {}
+            total = len(modes)
+
+            for mode in modes:
+                if mode not in mode_count:
+                    mode_count[mode] = 0
+                mode_count[mode] += 1
+
+            common_mode = max(mode_count.items(), key= lambda x: x[1])
+            mode_name = common_mode[0]
+            count = common_mode[1]
+
+            percentage = int((count/total) * 100)
+            result[state] = {mode_name, percentage}
+        return result
+
     # format result output
     def format_result(self, state_mode_summary):
         return ""
@@ -160,6 +176,7 @@ class Superstore():
     def state_shipmode(self):
         return ""
 
+# ========== Test cases for Superstore class ==========
 class TestSuperstoreReader(unittest.TestCase):
     def setUp(self):
         self.superstore_reader = Superstore('SampleSuperstore.csv')
