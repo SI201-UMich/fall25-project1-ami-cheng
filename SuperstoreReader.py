@@ -101,7 +101,7 @@ class Superstore():
         for category in profit_dict:
             profit = profit_dict[category]
             if profit:
-                avg = sum(profit)/ len(profit)
+                avg = round(sum(profit)/ len(profit),4)
             dict[category] = avg
         return dict
     
@@ -113,7 +113,7 @@ class Superstore():
             if profit > max_profit:
                 max_profit = profit
                 max_category = category
-        return f"{max_category} ${max_profit:.2f}"
+        return f"{max_category} ${max_profit:.4f}"
     
     # print category with highest profit
     def category_profit(self):
@@ -201,45 +201,44 @@ class TestSuperstoreReader(unittest.TestCase):
         self.assertTrue(all(isinstance(x, float) for x in self.superstore_reader.data_dict['Discount']))
         self.assertTrue(all(isinstance(x, float) for x in self.superstore_reader.data_dict['Profit']))
 
-        #2 more edge test cases
-
     def test_group_profits_by_category(self):
         grouped = self.superstore_reader.group_profits_by_category()
         self.assertIsInstance(grouped, dict)
         self.assertTrue(all(isinstance(val, list) for val in grouped.values()))
         self.assertIn('Furniture', grouped)
         self.assertIn('Office Supplies', grouped)
-
-        #2 more edge test cases
     
     def test_average_profit(self):
         test_data = {
-            'Furniture': [100.0, 200.0, 300.0], 
-            'Technology': [500.0, 500.0]
+            'Furniture': [100.00, 200.00, 300.00], 
+            'Technology': [500.0000, 500.0000],
+            'Office Supplies': [937.3279, 671.5801, 937.6748],
+            'Hygiene': [-2.1853, 580.10 , -908.7594, 0.9457]
         }
         result = self.superstore_reader.average_profit(test_data)
-        self.assertEqual(result['Furniture'], 200.0)
-        self.assertEqual(result['Technology'], 500.0)
-    
-        #2 more edge test cases
+        
+        # general cases
+        self.assertEqual(result['Furniture'], 200.0000)
+        self.assertEqual(result['Technology'], 500.0000)
+
+        # edge cases
+        self.assertEqual(result['Office Supplies'], 848.8609)
+        self.assertEqual(result['Hygiene'], -82.4748)
 
     def test_max_average_profit(self):
         average_profit_dict = {
-            'Furniture': 300.00,
-            'Office Supplies': 150.00,
-            'Technology': 1000.00,
+            'Furniture': 200.0000,
+            'Office Supplies': 848.8609,
+            'Technology': 500.0000,
+            'Hygiene': -82.4748,
         }
         result = self.superstore_reader.max_average_profit(average_profit_dict)
-        self.assertEqual(result, 'Technology $1000.00')
-        self.assertFalse(result == 'Office Supplies $150.00')
-    
-        #2 more edge test cases
+        self.assertEqual(result, 'Office Supplies $848.8609')
+        self.assertFalse(result == 'Hygiene -82.4748')
 
     def test_category_profit(self):
         result = self.superstore_reader.category_profit()
         self.assertIsInstance(result, str)
-    
-        #2 more edge test cases, 1 general test case
 
     def test_group_shipmode_by_state(self):
         grouped = self.superstore_reader.group_shipmode_by_state()
@@ -247,11 +246,16 @@ class TestSuperstoreReader(unittest.TestCase):
         self.assertTrue(all(isinstance(val, list) for val in grouped.values()))
         self.assertIn('Texas', grouped)
         self.assertIn('Washington', grouped)
-
-        #2 more edge test cases
     
     def test_get_most_common_shipmode(self):
-        return ""
+        state_mode_dict = {
+            'Alaska': {'First Class', 'First Class', 'First Class', 'Same Day', 'Same Day', 'Second Class'},
+            'Washington': {'Same Day', 'Same Day', 'Same Day', 'Same Day', 'First Class', 'Second Class'},
+            'Texas': {'First Class', 'Second Class', 'Same Day', 'Standard Class'}
+        }
+        result = self.superstore_reader.get_most_common_shipmode(state_mode_dict)
+        self.assertIsInstance(result, dict)
+        #self.assertEqual(result['Alaska'], {'Alaska': 'First Class', int(30)})
     
     def test_format_result(self):
         return ""
