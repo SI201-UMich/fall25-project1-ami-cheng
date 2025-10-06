@@ -133,7 +133,20 @@ class Superstore():
         """
     # create a list of ship mode assigned to their state
     def group_shipmode_by_state(self):
-        return ""
+        grouped = {}
+        states = self.data_dict['State']
+        ship_mode = self.data_dict['Ship Mode']
+
+        for i in range(len(states)):
+            state = states[i]
+            ship_modes = ship_mode[i]
+
+            if state not in grouped:
+                grouped[state] = []
+            grouped[state].append(ship_modes)
+
+        return grouped
+
     
     # find most common ship mode in each state and the percentage of most common ship mode used
     def get_most_common_shipmode(self, state_modes_dict):
@@ -212,7 +225,13 @@ class TestSuperstoreReader(unittest.TestCase):
         #2 more edge test cases, 1 general test case
 
     def test_group_shipmode_by_state(self):
-        return ""
+        grouped = self.superstore_reader.group_shipmode_by_state()
+        self.assertIsInstance(grouped, dict)
+        self.assertTrue(all(isinstance(val, list) for val in grouped.values()))
+        self.assertIn('Texas', grouped)
+        self.assertIn('Washington', grouped)
+
+        #2 more edge test cases
     
     def test_get_most_common_shipmode(self):
         return ""
