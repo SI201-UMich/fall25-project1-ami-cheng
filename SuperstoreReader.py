@@ -102,7 +102,9 @@ class Superstore():
     
     # print category with highest profit
     def category_profit(self):
-        return ""
+        grouped = self.group_profits_by_category()
+        average_profit = self.average_profit(grouped)
+        return self.max_average_profit(average_profit)
     
     # ========== Calculations for State Ship Mode ==========
         """
@@ -154,12 +156,16 @@ class TestSuperstoreReader(unittest.TestCase):
         self.assertTrue(all(isinstance(x, float) for x in self.superstore_reader.data_dict['Discount']))
         self.assertTrue(all(isinstance(x, float) for x in self.superstore_reader.data_dict['Profit']))
 
+        #2 more edge test cases
+
     def test_group_profits_by_category(self):
         grouped = self.superstore_reader.group_profits_by_category()
         self.assertIsInstance(grouped, dict)
         self.assertTrue(all(isinstance(val, list) for val in grouped.values()))
         self.assertIn('Furniture', grouped)
         self.assertIn('Office Supplies', grouped)
+
+        #2 more edge test cases
     
     def test_average_profit(self):
         test_data = {
@@ -170,6 +176,8 @@ class TestSuperstoreReader(unittest.TestCase):
         self.assertEqual(result['Furniture'], 200.0)
         self.assertEqual(result['Technology'], 500.0)
     
+        #2 more edge test cases
+
     def test_max_average_profit(self):
         average_profit_dict = {
             'Furniture': 300.00,
@@ -180,9 +188,14 @@ class TestSuperstoreReader(unittest.TestCase):
         self.assertEqual(result, 'Technology $1000.00')
         self.assertFalse(result == 'Office Supplies $150.00')
     
+        #2 more edge test cases
+
     def test_category_profit(self):
-        return ""
+        result = self.superstore_reader.category_profit()
+        self.assertIsInstance(result, str)
     
+        #2 more edge test cases, 1 general test case
+        
     def test_group_shipmode_by_state(self):
         return ""
     
