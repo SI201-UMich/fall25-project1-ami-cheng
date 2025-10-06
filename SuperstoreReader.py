@@ -5,6 +5,7 @@
 
 import os
 import unittest
+import csv
 
 class Superstore():
     def __init__(self, filename):
@@ -54,6 +55,20 @@ class Superstore():
             self.data_dict['Quantity'].append(int(item[10]))
             self.data_dict['Discount'].append(float(item[11]))
             self.data_dict['Profit'].append(float(item[12]))
+
+    # ========== Write functions into CSV file ==========
+    def results_to_csv(self, results, filename="output.csv"):
+        output_path = os.path.join(self.base_path, filename)
+
+        with open(output_path, mode='w', newline='', encoding='utf-8') as file:
+            writer = csv.writer(file)
+
+            writer.writerow(["Result"])
+            
+            for line in results:
+                writer.writerow([line])
+
+        print(f"Results written to {output_path}")
 
     # ========== Calculations for Category Profit ==========
         """
@@ -195,7 +210,7 @@ class TestSuperstoreReader(unittest.TestCase):
         self.assertIsInstance(result, str)
     
         #2 more edge test cases, 1 general test case
-        
+
     def test_group_shipmode_by_state(self):
         return ""
     
@@ -209,4 +224,9 @@ class TestSuperstoreReader(unittest.TestCase):
         return ""
 
 if __name__ == '__main__':
+    reader = Superstore('SampleSuperstore.csv')
+    reader.build_data_dict
+
+    results = reader.category_profit()
+    reader.results_to_csv(results, filename= "category_profit.csv")
     unittest.main(verbosity=2)
