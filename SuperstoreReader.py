@@ -155,6 +155,7 @@ class Superstore():
             if not modes:
                 result[state] = {"Ship Mode": None, "Percentage": 0}
                 continue
+
             mode_count = {}
             total = len(modes)
 
@@ -176,9 +177,9 @@ class Superstore():
         list = []
         for state, info in state_mode_summary.items():
             if isinstance (info, dict):
-                mode = info["mode"]
-                percentage = info["percentage"]
-        list.append(f"{state}: {mode} {percentage}%")
+                mode = info["Ship Mode"]
+                percentage = info["Percentage"]
+                list.append(f"{state}: {mode} {percentage}%")
         return list
     
     # input result for each state into format function
@@ -287,7 +288,18 @@ class TestSuperstoreReader(unittest.TestCase):
         self.assertEqual(result['Ohio']['Percentage'], 0)
 
     def test_format_result(self):
-        pass
+        dict = {
+            'Alaska': {'Ship Mode': 'First Class', 'Percentage': 50},
+            'Washington': {'Ship Mode': 'Same Day', 'Percentage': 66},
+            'Texas': {'Ship Mode': 'First Class', 'Percentage': 25},
+            'Ohio': {'Ship Mode': None, 'Percentage': 0}
+        }
+        result = self.superstore_reader.format_result(dict)
+        self.assertEqual(result, [
+            'Alaska: First Class 50%',
+            'Washington: Same Day 66%',
+            'Texas: First Class 25%',
+            'Ohio: None 0%'])
 
     def test_state_shipmode(self):
         pass
