@@ -152,6 +152,9 @@ class Superstore():
     def get_most_common_shipmode(self, state_modes_dict):
         result = {}
         for state, modes in state_modes_dict.items():
+            if not modes:
+                result[state] = {"Ship Mode": None, "Percentage": 0}
+                continue
             mode_count = {}
             total = len(modes)
 
@@ -165,16 +168,24 @@ class Superstore():
             count = common_mode[1]
 
             percentage = int((count/total) * 100)
-            result[state] = {mode_name, percentage}
+            result[state] = {"Ship Mode": mode_name, "Percentage": percentage}
         return result
 
     # format result output
     def format_result(self, state_mode_summary):
-        return ""
+        list = []
+        for state, info in state_mode_summary.items():
+            if isinstance (info, dict):
+                mode = info["mode"]
+                percentage = info["percentage"]
+        list.append(f"{state}: {mode} {percentage}%")
+        return list
     
     # input result for each state into format function
     def state_shipmode(self):
-        return ""
+        grouped = self.group_shipmode_by_state()
+        result = self.get_most_common_shipmode(grouped)
+        return self.format_result(result)
 
 # ========== Test cases for Superstore class ==========
 class TestSuperstoreReader(unittest.TestCase):
@@ -221,7 +232,7 @@ class TestSuperstoreReader(unittest.TestCase):
         self.assertEqual(result['Furniture'], 200.0000)
         self.assertEqual(result['Technology'], 500.0000)
 
-        # edge cases
+        # edge cases: negative profit, varied decimal
         self.assertEqual(result['Office Supplies'], 848.8609)
         self.assertEqual(result['Hygiene'], -82.4748)
 
@@ -249,19 +260,37 @@ class TestSuperstoreReader(unittest.TestCase):
     
     def test_get_most_common_shipmode(self):
         state_mode_dict = {
-            'Alaska': {'First Class', 'First Class', 'First Class', 'Same Day', 'Same Day', 'Second Class'},
-            'Washington': {'Same Day', 'Same Day', 'Same Day', 'Same Day', 'First Class', 'Second Class'},
-            'Texas': {'First Class', 'Second Class', 'Same Day', 'Standard Class'}
+            'Alaska': ['First Class', 'First Class', 'First Class', 'Same Day', 'Same Day', 'Second Class'],
+            'Washington': ['Same Day', 'Same Day', 'Same Day', 'Same Day', 'First Class', 'Second Class'],
+            'Texas': ['First Class', 'Second Class', 'Same Day', 'Standard Class'],
+            'Michigan': ['First Class', 'Second Class'],
+            'Ohio': []
         }
         result = self.superstore_reader.get_most_common_shipmode(state_mode_dict)
         self.assertIsInstance(result, dict)
-        #self.assertEqual(result['Alaska'], {'Alaska': 'First Class', int(30)})
-    
+
+        # testing format 
+        self.assertIn('Alaska', result)
+        self.assertTrue('Ship Mode' in result['Alaska'])
+        self.assertTrue('Percentage' in result['Alaska'])
+
+        # general cases for calculation
+        self.assertEqual(result['Alaska']['Ship Mode'], 'First Class')
+        self.assertEqual(result['Alaska']['Percentage'], 50)
+        self.assertEqual(result['Washington']['Ship Mode'], 'Same Day')
+        self.assertEqual(result['Washington']['Percentage'], 66)
+
+        # edge cases for calculation: tie in ship modes, no ship mode found
+        self.assertEqual(result['Texas']['Ship Mode'], 'First Class')
+        self.assertEqual(result['Texas']['Percentage'], 25)
+        self.assertEqual(result['Ohio']['Ship Mode'], None)
+        self.assertEqual(result['Ohio']['Percentage'], 0)
+
     def test_format_result(self):
-        return ""
+        pass
 
     def test_state_shipmode(self):
-        return ""
+        pass
 
 if __name__ == '__main__':
     reader = Superstore('SampleSuperstore.csv')
