@@ -1,7 +1,7 @@
 # Amelia Cheng
 # amicheng
 # 2504 8424
-# I worked on this project independently
+# I worked on this project independently, with assistance of ChatGPT to correct my function definitions and errors in creating dictionaries
 
 import os
 import unittest
@@ -302,7 +302,25 @@ class TestSuperstoreReader(unittest.TestCase):
             'Ohio: None 0%'])
 
     def test_state_shipmode(self):
-        pass
+        input_dict = {
+            'Alaska': ['First Class', 'First Class', 'First Class', 'Same Day', 'Same Day', 'Second Class'],
+            'Washington': ['Same Day', 'Same Day', 'Same Day', 'Same Day', 'First Class', 'Second Class'],
+            'Texas': ['First Class', 'Second Class', 'Same Day', 'Standard Class'],
+            'Ohio': []
+        }
+
+        output_list = [
+            'Alaska: First Class 50%',
+            'Washington: Same Day 66%',
+            'Texas: First Class 25%',
+            'Ohio: None 0%']
+        
+        self.superstore_reader.group_shipmode_by_state = lambda: input_dict
+        result = self.superstore_reader.state_shipmode()
+
+        self.assertIsInstance(result, list)
+        self.assertEqual(result, output_list)
+        self.assertTrue(all(isinstance(line, str) for line in output_list))
 
 if __name__ == '__main__':
     reader = Superstore('SampleSuperstore.csv')
