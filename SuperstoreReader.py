@@ -1,7 +1,9 @@
 # Amelia Cheng
 # amicheng
 # 2504 8424
-# I worked on this project independently, with assistance of ChatGPT to correct my function definitions and errors in creating dictionaries
+# I worked on this project independently, 
+# with assistance of ChatGPT to correct my function 
+# definitions and errors in creating dictionaries
 
 import os
 import unittest
@@ -324,8 +326,8 @@ class TestSuperstoreReader(unittest.TestCase):
 
 if __name__ == '__main__':
     reader = Superstore('SampleSuperstore.csv')
-    reader.build_data_dict
+    reader.build_data_dict()
 
-    results = reader.category_profit()
+    results = [reader.category_profit()]
     reader.results_to_csv(results, filename= "category_profit.csv")
-    unittest.main(verbosity=2)
+    unittest.main(argv=[''], verbosity=2, exit=False)
